@@ -6,3 +6,5 @@ imutils
 numpy
 matplotlib
 seaborn
+tqdm
+scikit-image
