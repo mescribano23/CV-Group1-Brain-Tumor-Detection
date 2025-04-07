@@ -1,115 +1,38 @@
-# Brain-Tumor-Detector
-Building a detection model using a convolutional neural network in Tensorflow & Keras.<br>
-Used a brain MRI images data founded on Kaggle. You can find it [here](https://www.kaggle.com/navoneel/brain-mri-images-for-brain-tumor-detection).<br>
+# Research Questions and Extended Experiments
 
-**About the data:**<br>
-The dataset contains 2 folders: yes and no which contains 253 Brain MRI Images. The folder yes contains 155 Brain MRI Images that are tumorous and the folder no contains 98 Brain MRI Images that are non-tumorous.
+[This repository](https://github.com/MohamedAliHabib/Brain-Tumor-Detection) has been extended with additional research questions to explore the capabilities of the CNN model across different scenarios and datasets.
 
-# Getting Started
+# Research Questions
 
-**Note:** sometimes viewing IPython notebooks using GitHub viewer doesn't work as expected, so you can always view them using [nbviewer](https://nbviewer.jupyter.org/).
+To guide our investigation, we decided to breakdown the problem into Research Questions:
 
-## Data Augmentation:
+- **RQ1: How does modifying the baseline CNN model architecture affect accuracy on tumor detection?**
 
-**Why did I use data augmentation?**
+This research question aims to provide insight into the best architectural choices for a CNN in detecting tumors from MRI scans. The structure of a CNN significantly influences its ability to extract relevant features, generalize across different cases, and achieve high diagnostic accuracy. By systematically evaluating architectural modifications, namely layer depth, kernel size and dropout rate, we can understand the impact of design choices and identify configurations that improve performance. 
+    
+- **RQ2: How does including data pre-processing and data augmentation techniques affect the accuracy of the CNN model?**
 
-Since this is a small dataset, There wasn't enough examples to train the neural network. Also, data augmentation was useful in taclking the data imbalance issue in the data.<br>
-
-Further explanations are found in the Data Augmentation notebook.
-
-Before data augmentation, the dataset consisted of:<br>
-155 positive and 98 negative examples, resulting in 253 example images.
-
-After data augmentation, now the dataset consists of:<br>
-1085 positive and 980 examples, resulting in 2065 example images.
-
-**Note:** these 2065 examples contains also the 253 original images. They are found in folder named 'augmented data'.
-
-## Data Preprocessing
-
-For every image, the following preprocessing steps were applied:
-
-1. Crop the part of the image that contains only the brain (which is the most important part of the image).
-2. Resize the image to have a shape of (240, 240, 3)=(image_width, image_height, number of channels): because images in the dataset come in different sizes. So, all images should have the same shape to feed it as an input to the neural network.
-3. Apply normalization: to scale pixel values to the range 0-1.
-
-## Data Split:
-
-The data was split in the following way:
-1. 70% of the data for training.
-2. 15% of the data for validation.
-3. 15% of the data for testing.
-
-# Neural Network Architecture
-
-This is the architecture that I've built:
-
-![Neural Network Architecture](convnet_architecture.jpg)
-
-**Understanding the architecture:**<br>
-Each input x (image) has a shape of (240, 240, 3) and is fed into the neural network. And, it goes through the following layers:<br>
-
-1. A Zero Padding layer with a pool size of (2, 2).
-2. A convolutional layer with 32 filters, with a filter size of (7, 7) and a stride equal to 1.
-3. A batch normalization layer to normalize pixel values to speed up computation.
-4. A ReLU activation layer.
-5. A Max Pooling layer with f=4 and s=4.
-6. A Max Pooling layer with f=4 and s=4, same as before.
-7. A flatten layer in order to flatten the 3-dimensional matrix into a one-dimensional vector.
-8. A Dense (output unit) fully connected layer with one neuron with a sigmoid activation (since this is a binary classification task).
-
-**Why this architecture?**<br>
-
-Firstly, I applied transfer learning using a ResNet50 and vgg-16, but these models were too complex to the data size and were overfitting. Of course, you may get good results applying transfer learning with these models using data augmentation. But, I'm using training on a computer with 6th generation Intel i7 CPU and 8 GB memory. So, I had to take into consideration computational complexity and memory limitations.<br>
-
-So why not try a simpler architecture and train it from scratch. And it worked :)
-
-# Training the model
-The model was trained for 24 epochs and these are the loss & accuracy plots:
+This research question examines how different data pre-processing techniques affect CNN model performance, aiming to identify methods that boost classification accuracy. It also explores data augmentation, including a novel approach, simulating artifacts from auditory (hearing aid) and intracortical (restoring motor/sensory control) neural implants, to enhance model robustness. These synthetic artifacts mimic real-world MRI data variations from implant patients, and we’ll assess their impact on the model’s ability to manage complex data.
 
 
-![Loss plot](Loss.PNG)
+- **RQ3: How does the CNN perform on different image tasks and datasets?**
 
+This question assesses the best architecture CNN from **RQ1** in two parts. First, to measure the generalizability of the CNN architecture on other datasets, we evaluate **binary classification** (tumor vs. no tumor) on:
 
-![Accuracy plot](Accuracy.PNG)
+- Brain MRI Images (Dataset I)
+- Brain Tumor MRI (Dataset II)
+- Brain Tumor Classification MRI (Dataset III)
 
-The best validation accuracy was achieved on the 23rd iteration.
+Second, to measure the the robustness and flexibility of the model, we modify the architecture to perform a different task, specifically **multiclass classification**, on:
 
-# Results
+- Brain Tumor MRI (Dataset I)
+- Figshare Brain Tumor (Dataset II).
 
-Now, the best model (the one with the best validation accuracy) detects brain tumor with:<br>
-
-**88.7%** accuracy on the **test set**.<br>
-**0.88** f1 score on the **test set**.<br>
-These resutls are very good considering that the data is balanced.
-
-**Performance table of the best model:**
-
-| <!-- -->  | Validation set | Test set |
-| --------- | -------------- | -------- |
-| Accuracy  | 91%            | 89%      |
-| F1 score  | 0.91           | 0.88     |
-
-
-# Final Notes
-
-What's in the files?
-
-1. The code in the IPython notebooks.
-2. The weights for all the models. The best model is named as 'cnn-parameters-improvement-23-0.91.model'.
-3. The models are stored as *.model* files. They can be restored as follows:
-
-
-```
-from tensorflow.keras.models import load_model
-best_model = load_model(filepath='models/cnn-parameters-improvement-23-0.91.model')
-```
-
-4. The original data in the folders named 'yes' and 'no'. And, the augmented data in the folder named 'augmented data'.
-
-
-Contributes are welcome!
-<br>Thank you!
+## Running the Experiments
+To run any of the research question experiments:
+1. Navigate to the respective RQ folder
+2. Follow the instructions in the notebook files
+3. For RQ3, ensure to run `dataset_preparation.ipynb` first to download and prepare the datasets
 
 
 
